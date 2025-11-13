@@ -17,16 +17,13 @@ from misago.settings import *
 
 from .utils import strtobool, strtolist
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Define placeholder gettext function
 # This function will mark strings in settings visible to makemessages
 # without need for Django's i18n features be initialized first.
 _ = lambda s: s
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -37,12 +34,10 @@ SECRET_KEY = os.environ.get('MISAGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = strtobool(os.environ.get('MISAGO_DEBUG'))
 
-
 # A list of strings representing the host/domain names that this Django site can serve.
 # If you are unsure, just enter here your domain name, eg. ['mysite.com', 'www.mysite.com']
 
 ALLOWED_HOSTS = strtolist(os.environ.get('VIRTUAL_HOST'))
-
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -59,7 +54,7 @@ DATABASES = {
     }
 }
 
-DEFAULT_AUTO_FIELD = "django.db.models.AutoField" 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Caching
 # https://docs.djangoproject.com/en/1.11/topics/cache/#setting-up-the-cache
@@ -70,7 +65,6 @@ CACHES = {
         "LOCATION": os.environ.get('CACHE_REDIS_URL', "redis://redis-6/1"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -96,7 +90,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -108,30 +101,25 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 # User uploads (Avatars, Attachments, files uploaded in other Django apps, ect.)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 MEDIA_URL = '/media/'
 
-
 # The absolute path to the directory where collectstatic will collect static files for deployment.
 # https://docs.djangoproject.com/en/1.11/ref/settings/#static-root
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # https://docs.djangoproject.com/en/1.11/ref/settings/#media-root
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 # This setting defines the additional locations the staticfiles app will traverse if the FileSystemFinder finder
 # is enabled, e.g. if you use the collectstatic or findstatic management command or use the static file serving view.
@@ -141,13 +129,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'theme', 'static'),
 ]
 
-
 # Fingerprint static files
 # Includes small version checksum at end of every static file,
 # forcing browser to download new version when file contents change.
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
 
 # Email configuration
 # https://docs.djangoproject.com/en/1.11/ref/settings/#email-backend
@@ -161,7 +147,7 @@ if os.environ.get('MISAGO_EMAIL_PROVIDER') == "smtp":
     EMAIL_HOST = os.environ['MISAGO_EMAIL_HOST']
     EMAIL_HOST_PASSWORD = os.environ['MISAGO_EMAIL_PASSWORD']
     EMAIL_HOST_USER = os.environ['MISAGO_EMAIL_USER']
-    EMAIL_PORT =  os.environ['MISAGO_EMAIL_PORT']
+    EMAIL_PORT = os.environ['MISAGO_EMAIL_PORT']
 elif os.environ.get('MISAGO_EMAIL_PROVIDER') == "gmail":
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_USE_TLS = True
@@ -183,11 +169,9 @@ elif os.environ.get('MISAGO_EMAIL_PROVIDER') == "sendinblue":
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
 # Default email address to use for various automated correspondence from the site manager(s).
 
 DEFAULT_FROM_EMAIL = os.environ.get('MISAGO_DEFAULT_FROM_EMAIL', '')
-
 
 # Application definition
 
@@ -311,7 +295,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'misagodocker.wsgi.application'
 
-
 # Django Debug Toolbar
 # http://django-debug-toolbar.readthedocs.io/en/stable/configuration.html
 
@@ -331,7 +314,6 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.signals.SignalsPanel',
 ]
 
-
 # Django Rest Framework
 # http://www.django-rest-framework.org/api-guide/settings/
 
@@ -347,20 +329,26 @@ REST_FRAMEWORK = {
     'URL_FORMAT_OVERRIDE': None,
 }
 
-
 # Celery - Distributed Task Queue
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html
 
 # Configure Celery to use Redis as message broker.
 
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', "redis://redis-6/0")
+CELERY_BROKER_URL = os.environ.get(
+    'CELERY_BROKER_URL',
+    "redis://:{}:{}/{}".format(
+        os.environ.get('REDIS_PASSWORD', ''),
+        os.environ.get('REDIS_HOST', 'redis'),
+        os.environ.get('REDIS_DB', '0'),
+    )
+)
 
 # Celery workers may leak the memory, eventually depriving the instance of resources.
 # This setting forces celery to stop worker, clean after it and create new one
 # after worker has processed 10 tasks.
 
 CELERY_WORKER_MAX_TASKS_PER_CHILD = 10
-
+CELERY_WORKER_CONCURRENCY = int(os.getenv('CELERY_WORKER_CONCURRENCY', '2'))  # 根据 CPU 核心数调整
 
 # Default logging configuration
 # Logs errors to /logs/misago.log, rotates them every week
@@ -384,14 +372,14 @@ LOGGING = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'formatter': 'simple',
             'filename': os.path.join(BASE_DIR, 'logs', 'misago.log'),
-            'when': 'W0', # Rotate logs on mondays
+            'when': 'W0',  # Rotate logs on mondays
         },
         'celery': {
             'level': 'ERROR',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'formatter': 'simple',
             'filename': os.path.join(BASE_DIR, 'logs', 'celery.log'),
-            'when': 'W0', # Rotate logs on mondays
+            'when': 'W0',  # Rotate logs on mondays
         },
     },
     'loggers': {
@@ -406,7 +394,6 @@ LOGGING = {
     },
 }
 
-
 # Enable sentry for logging, if Sentry DNS is specified
 if os.environ.get('SENTRY_DSN'):
     import sentry_sdk
@@ -416,7 +403,6 @@ if os.environ.get('SENTRY_DSN'):
         dsn=os.environ['SENTRY_DSN'],
         integrations=[DjangoIntegration()]
     )
-
 
 # Misago specific settings
 # https://misago.readthedocs.io/en/latest/developers/settings.html
@@ -431,18 +417,15 @@ if os.environ.get('SENTRY_DSN'):
 
 MISAGO_SEARCH_CONFIG = os.environ.get('MISAGO_SEARCH_CONFIG', 'simple')
 
-
 # Path to the directory that Misago should use to prepare user data downloads.
 # Should not be accessible from internet.
 
 MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = os.path.join(BASE_DIR, 'userdata')
 
-
 # Path to directory containing avatar galleries
 # Those galleries can be loaded by running loadavatargallery command
 
 MISAGO_AVATAR_GALLERY = os.path.join(BASE_DIR, 'avatargallery')
-
 
 # Profile fields
 
@@ -472,11 +455,9 @@ MISAGO_PROFILE_FIELDS = [
     },
 ]
 
-
 # Display threads instead of categories on forum index?
 
 MISAGO_THREADS_ON_INDEX = os.environ.get('MISAGO_INDEX', "threads") == "threads"
-
 
 # Import settings override
 try:
