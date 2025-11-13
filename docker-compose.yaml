@@ -4,6 +4,8 @@ services:
         image: yiove/misago-forum:1.0
         build: misago
         restart: unless-stopped
+        ports:
+            - "28000:3031"
         networks:
             - 1panel-network
         environment:
