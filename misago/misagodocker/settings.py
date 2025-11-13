@@ -62,7 +62,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.environ.get('CACHE_REDIS_URL', "redis://redis-6/1"),
+        "LOCATION": os.environ.get(
+            'CACHE_REDIS_URL', "redis://:{}@{}:{}/{}".format(
+                os.environ.get('REDIS_PASSWORD', ''),
+                os.environ.get('REDIS_HOST', 'redis'),
+                os.environ.get('REDIS_PORT', '6379'),
+                os.environ.get('REDIS_CACHE_DB', '1'),
+            )
+        ),
     }
 }
 
@@ -336,9 +343,10 @@ REST_FRAMEWORK = {
 
 CELERY_BROKER_URL = os.environ.get(
     'CELERY_BROKER_URL',
-    "redis://:{}:{}/{}".format(
+    "redis://:{}@{}:{}/{}".format(
         os.environ.get('REDIS_PASSWORD', ''),
         os.environ.get('REDIS_HOST', 'redis'),
+        os.environ.get('REDIS_PORT', '6379'),
         os.environ.get('REDIS_DB', '0'),
     )
 )
