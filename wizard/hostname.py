@@ -47,9 +47,6 @@ def run_hostname_wizard(env_file):
 
     env_file["MISAGO_ADDRESS"] = "https://%s/" % hostname
 
-    run_nginx_wizard(env_file)
-    run_lets_encrypt_wizard(env_file)
-
 
 def run_lets_encrypt_wizard(env_file):
     email_prompt = "Enter contact e-mail address for Let's Encrypt: "
