@@ -25,6 +25,7 @@ services:
             - ./misago/theme:/misago/theme:ro
             - ./backups:/misago/backups:Z
             - ./logs:/misago/logs:z
+            - ./misago/misagodocker:/misago/misagodocker:Z
 
     celery-worker:
         container_name: misago-celery-worker
