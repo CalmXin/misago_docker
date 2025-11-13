@@ -26,6 +26,7 @@ services:
             - ./backups:/misago/backups:Z
             - ./logs:/misago/logs:z
             - ./misago/misagodocker:/misago/misagodocker:Z
+            - ./misago/uwsgi.ini:/misago/uwsgi.ini:Z
 
     celery-worker:
         container_name: misago-celery-worker
