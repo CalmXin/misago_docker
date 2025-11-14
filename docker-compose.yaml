@@ -17,7 +17,7 @@ services:
             - VIRTUAL_PROTO=uwsgi
         env_file:
             - ./config/misago.env
-            - ./config/.env
+            - .env
         volumes:
             - ./misago/media:/misago/media:z
             - ./misago/static:/misago/static:z
@@ -43,7 +43,7 @@ services:
             - POSTGRES_PASSWORD=${MISAGO_POSTGRES_PASSWORD:-misagodbpassword}
         env_file:
             - ./config/misago.env
-            - ./config/.env
+            - .env
         volumes:
             - ./misago/media:/misago/media:z
             - ./misago/static:/misago/static:z
