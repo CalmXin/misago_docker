@@ -1,7 +1,7 @@
 services:
     misago:
         container_name: misago-forum
-        image: yiove/misago-forum:1.0
+        image: yiove/misago:1.0
         build: misago
         restart: unless-stopped
         ports:
@@ -30,8 +30,7 @@ services:
 
     celery-worker:
         container_name: misago-celery-worker
-        image: yiove/misago-celery-worker:1.0
-        build: misago
+        image: yiove/misago:1.0
         command: celery -A misagodocker worker --loglevel=info
         restart: unless-stopped
         networks:

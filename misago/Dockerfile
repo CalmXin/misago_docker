@@ -33,5 +33,5 @@ RUN ./.run bootstrap_plugins
 # Expose port 3031 from Docker
 EXPOSE 3031
 
-# Call entrypoint script to setup 
-CMD ["uwsgi", "--ini", "uwsgi.ini"]
+# Call entrypoint script to setup
+CMD ["gunicorn", "-c", "gunicorn_config.py", "misagodocker.wsgi:application"]
