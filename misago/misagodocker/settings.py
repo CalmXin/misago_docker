@@ -70,6 +70,7 @@ CACHES = {
                 os.environ.get('REDIS_CACHE_DB', '1'),
             )
         ),
+        "KEY_PREFIX": "misago",
     }
 }
 
