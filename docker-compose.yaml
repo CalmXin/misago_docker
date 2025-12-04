@@ -5,14 +5,14 @@ services:
         build: misago
         restart: unless-stopped
         ports:
-            - "28000:3031"
+            - "23456:3031"
         networks:
             - 1panel-network
         env_file:
             - ./config/misago.env
             - config.env
         volumes:
-            - /opt/myapps/misago_docker/misago/media:/misago/media:z
+            - ./misago/media:/misago/media:z
             - ./misago/static:/misago/static:z
             - ./misago/avatargallery:/misago/avatargallery:ro
             - ./misago/theme:/misago/theme:ro
