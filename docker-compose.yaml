@@ -8,18 +8,11 @@ services:
             - "28000:3031"
         networks:
             - 1panel-network
-        environment:
-            - POSTGRES_HOST=${MISAGO_POSTGRES_HOST:-postgres-15}
-            - POSTGRES_DB=${MISAGO_POSTGRES_DB:-misagodb}
-            - POSTGRES_USER=${MISAGO_POSTGRES_USER:-misagodb}
-            - POSTGRES_PASSWORD=${MISAGO_POSTGRES_PASSWORD:-misagodbpassword}
-            - SSL_POLICY=Mozilla-Modern
-            - VIRTUAL_PROTO=uwsgi
         env_file:
             - ./config/misago.env
-            - .env
+            - config.env
         volumes:
-            - ./misago/media:/misago/media:z
+            - /opt/myapps/misago_docker/misago/media:/misago/media:z
             - ./misago/static:/misago/static:z
             - ./misago/avatargallery:/misago/avatargallery:ro
             - ./misago/theme:/misago/theme:ro
@@ -35,14 +28,9 @@ services:
         restart: unless-stopped
         networks:
             - 1panel-network
-        environment:
-            - POSTGRES_HOST=${MISAGO_POSTGRES_HOST:-postgres-15}
-            - POSTGRES_DB=${MISAGO_POSTGRES_DB:-misagodb}
-            - POSTGRES_USER=${MISAGO_POSTGRES_USER:-misagodb}
-            - POSTGRES_PASSWORD=${MISAGO_POSTGRES_PASSWORD:-misagodbpassword}
         env_file:
             - ./config/misago.env
-            - .env
+            - config.env
         volumes:
             - ./misago/media:/misago/media:z
             - ./misago/static:/misago/static:z
